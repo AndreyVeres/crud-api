@@ -1,5 +1,3 @@
-import { JsonService } from './json.service.js';
-
 export class Request {
   constructor(request) {
     this.request = request;
@@ -14,6 +12,10 @@ export class Request {
     return params;
   }
 
+  get urlParts() {
+    return this.request.url.split('/').splice(1);
+  }
+
   async getBody() {
     return new Promise((resolve, reject) => {
       let body = '';
@@ -26,7 +28,7 @@ export class Request {
         if (this.request.headers['content-type'] === 'application/x-www-form-urlencoded') {
           resolve(new URLSearchParams(body));
         } else {
-          resolve(JsonService.parse(body));
+          resolve(JSON.parse(body));
         }
       });
 

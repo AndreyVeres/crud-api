@@ -5,13 +5,21 @@ export class AppRouter {
     this.users = new UsersController();
   }
 
-  async navigate(root, req, res) {
-    if (!this[root]) {
-      return res.end('Route not found');
+  async navigate(req, res) {
+    const { method, params, urlParts } = req;
+    const [root] = urlParts;
+    const [id] = params;
+
+    if (!root) {
+      return res.status(200).end('Hello from server! Available routes = /users');
     }
 
-    const { method } = req;
+    const handlerName = `${method}${id ? '_ID' : ''}`;
 
-    this[root][method](req, res);
+    if (!this[root]?.[handlerName]) {
+      return res.status(404).end('route not found');
+    }
+
+    this[root][handlerName](req, res);
   }
 }

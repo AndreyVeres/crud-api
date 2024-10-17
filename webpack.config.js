@@ -1,24 +1,20 @@
 import path from 'path';
-import nodeExternals from 'webpack-node-externals';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default {
   entry: './src/index.js',
   target: 'node',
-  mode: 'production',
-  externals: [nodeExternals()],
   output: {
-    path: path.resolve('dist'),
-    filename: 'server.bundle.js',
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'index.js',
+    libraryTarget: 'module',
+    chunkFormat: 'commonjs',
   },
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-      },
-    ],
+  experiments: {
+    outputModule: true,
   },
-  resolve: {
-    extensions: ['.js'],
-  },
+  mode: 'production',
 };

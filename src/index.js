@@ -1,6 +1,8 @@
 import { App } from './app.js';
 import { config } from 'dotenv';
+config();
 
-// config();
+const PORT = process.env.PORT;
+const app = new App();
 
-new App().init().listen(process.env.PORT);
+app.start(PORT);
