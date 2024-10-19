@@ -20,4 +20,6 @@ export const db = {
       hobbies: ['Sleep'],
     },
   ],
+
+  // users: [],
 };

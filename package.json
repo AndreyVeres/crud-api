@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "build": "webpack",
-    "start:dev": "nodemon ./src/index.js",
-    "start:prod": "npm run build && node dist/index.js"
+    "start:dev": "nodemon ./src/entry.js",
+    "start:prod": "npm run build && node dist/index.js",
+    "start:multi": "nodemon ./src/entry.multi.js"
   },
   "author": "",
   "license": "ISC",
