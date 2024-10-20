@@ -5,15 +5,13 @@ import { config } from 'dotenv';
 config();
 
 const { WORKER_BASE_PORT, HOSTNAME } = process.env;
+
 const numCPUs = cpus().length;
 
 export class LoadBalancer {
-  constructor() {
-    this.currentWorker = 0;
-    return this.#_init();
-  }
+  private currentWorker = 0;
 
-  #_init() {
+  start() {
     cpus().forEach(() => cluster.fork());
 
     const balancer = this.#createBalancer();
@@ -25,14 +23,20 @@ export class LoadBalancer {
   #watchDb() {
     cluster.on('message', (_, { db }) => {
       for (const id in cluster.workers) {
-        cluster.workers[id].send({
-          db,
-        });
+        if (cluster.workers[id]) {
+          cluster.workers[id].send({
+            db,
+          });
+        }
       }
     });
   }
 
   #createBalancer() {
+    if (!WORKER_BASE_PORT || !HOSTNAME) {
+      throw new Error('Environment variables WORKER_BASE_PORT and HOSTNAME must be set.');
+    }
+
     return createServer((req, res) => {
       req.pipe(
         request(
@@ -44,8 +48,10 @@ export class LoadBalancer {
             headers: req.headers,
           },
           (proxyRes) => {
-            res.writeHead(proxyRes.statusCode, proxyRes.headers);
-            proxyRes.pipe(res, { end: true });
+            if (proxyRes.statusCode) {
+              res.writeHead(proxyRes.statusCode, proxyRes.headers);
+              proxyRes.pipe(res, { end: true });
+            }
           }
         ),
         { end: true }

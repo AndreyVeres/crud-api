@@ -1,14 +1,11 @@
 import { createServer } from 'http';
-import { AppRouter } from './app.router.js';
-import { Request } from './utils/request.js';
-import { Response } from './utils/response.js';
+import { AppRouter } from './app.router';
+import { Request } from './utils/request';
+import { Response } from './utils/response';
 export class App {
-  constructor() {
-    this.router = new AppRouter();
-    return this.#_init();
-  }
+  private router = new AppRouter();
 
-  #_init() {
+  start() {
     return createServer((req, res) => {
       const request = new Request(req);
       const response = new Response(res);

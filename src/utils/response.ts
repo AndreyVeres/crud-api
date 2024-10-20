@@ -1,13 +1,16 @@
+import { ServerResponse } from 'http';
+
 export class Response {
-  constructor(response) {
+  private response;
+  constructor(response: ServerResponse) {
     this.response = response;
   }
 
-  end(data) {
+  end(data?: unknown) {
     return this.response.end(JSON.stringify(data));
   }
 
-  status(status) {
+  status(status: number) {
     this.response.statusCode = status;
     return this;
   }

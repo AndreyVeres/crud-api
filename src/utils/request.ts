@@ -1,19 +1,24 @@
+import { IncomingMessage } from 'http';
+
+type Method = 'POST' | 'PUT' | 'DELETE' | 'GET';
+
 export class Request {
-  constructor(request) {
+  private request: IncomingMessage;
+  constructor(request: IncomingMessage) {
     this.request = request;
   }
 
   get method() {
-    return this.request.method;
-  }
-
-  get params() {
-    const [_, ...params] = this.request.url.split('/').splice(1);
-    return params;
+    return (this.request.method || 'GET') as Method;
   }
 
   get urlParts() {
-    return this.request.url.split('/').splice(1);
+    return this.request.url?.split('/').splice(1) || []
+  }
+
+  get params() {
+    const [_, ...params] = this.request.url?.split('/').splice(1) || [];
+    return params;
   }
 
   async getBody() {
@@ -32,7 +37,7 @@ export class Request {
             resolve(JSON.parse(body));
           }
         } catch (err) {
-          reject(new Error(`Invalid JSON format: ${err.message}`));
+          reject(new Error(`Invalid JSON format: ${(err as Error).message}`));
         }
       });
 

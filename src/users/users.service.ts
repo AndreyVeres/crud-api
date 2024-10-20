@@ -1,11 +1,14 @@
-import { db } from '../db.js';
+import { db } from '../db';
+import { User } from './user.model';
 
 let database = db;
 
 export class UsersService {
   constructor() {
-    process.on('message', function ({ db }) {
-      database = db;
+    process.on('message', ({ db }) => {
+      if (db) {
+        database = db;
+      }
     });
   }
 
@@ -13,21 +16,21 @@ export class UsersService {
     return database.users;
   }
 
-  getById(id) {
+  getById(id: string) {
     return database.users.find((user) => user.id === id);
   }
 
-  create(user) {
+  create(user: User) {
     database.users.push(user);
     this.#updateDb();
   }
 
-  delete(id) {
+  delete(id: string) {
     database.users = database.users.filter((user) => user.id !== id);
     this.#updateDb();
   }
 
-  update(user, props) {
+  update(user: User, props: Partial<User>) {
     const updatedUser = Object.assign(user, {
       ...props,
       id: user.id,
@@ -39,6 +42,8 @@ export class UsersService {
   }
 
   #updateDb() {
-    process.send({ db: database });
+    if (process.send) {
+      process.send({ db: database });
+    }
   }
 }

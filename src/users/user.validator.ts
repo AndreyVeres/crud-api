@@ -1,5 +1,18 @@
-export class UserValidator {
-  constructor(field, value) {
+type Primitive = 'string' | 'number';
+
+interface UserValidatorRules {
+  type?: Primitive;
+  instance?: ArrayConstructor;
+  touchBy: 'typeof' | 'instanceOf';
+  itemType?: Primitive;
+}
+
+export class UserValidator<T> {
+  private field: string;
+  private value: T;
+  private rules: UserValidatorRules;
+
+  constructor(field: string, value?: T) {
     if (!value) {
       throw Error(`Property '${field}' is required`);
     }
@@ -8,21 +21,21 @@ export class UserValidator {
     this.field = field;
   }
 
-  useRules(rules) {
+  useRules(rules: UserValidatorRules) {
     this.rules = rules;
     return this;
   }
 
   validate() {
-    const { type, touchBy, itemType } = this.rules;
+    const { type, touchBy, itemType, instance } = this.rules;
 
     if (touchBy === 'typeof') {
       if (typeof this.value !== type) {
         throw Error(`Property '${this.field}' should be of type ${type}`);
       }
     } else {
-      if (!(this.value instanceof type)) {
-        throw Error(`Property '${this.field}' should be of type ${type.name}`);
+      if (instance && !(this.value instanceof instance)) {
+        throw Error(`Property '${this.field}' should be of type ${instance.name}`);
       }
 
       if (Array.isArray(this.value) && itemType) {

@@ -1,14 +1,17 @@
 import { validate } from 'uuid';
-import { User } from './user.model.js';
-import { UsersService } from './users.service.js';
+import { User } from './user.model';
+import { UsersService } from './users.service';
+import { Request } from '../utils/request';
+import { Response } from '../utils/response';
 
 export class UsersController {
-  constructor() {
-    this.userService = new UsersService();
-  }
+  private userService = new UsersService();
 
-  async DELETE_ID(req, res) {
+  async DELETE_ID(req: Request, res: Response) {
     const [id] = req.params;
+    if (!id) {
+      return res.status(400).end('user id not provide');
+    }
 
     if (!validate(id)) return res.status(400).end('userId is invalid (not uuid)');
 
@@ -20,8 +23,12 @@ export class UsersController {
     return res.status(204).end();
   }
 
-  async PUT_ID(req, res) {
+  async PUT_ID(req: Request, res: Response) {
     const [id] = req.params;
+
+    if (!id) {
+      return res.status(400).end('user id not provide');
+    }
 
     if (!validate(id)) return res.status(400).end('userId is invalid (not uuid)');
 
@@ -29,33 +36,37 @@ export class UsersController {
     if (!user) return res.status(404).end(`user with id:${id} doesn't exist`);
 
     try {
-      const body = await req.getBody();
+      const body = (await req.getBody()) as Partial<User>;
       const updatedUser = this.userService.update(user, new User(body));
 
       return res.status(200).end(updatedUser);
     } catch (err) {
-      return res.status(400).end(err.message);
+      return res.status(400).end((err as Error).message);
     }
   }
 
-  async POST(req, res) {
+  async POST(req: Request, res: Response) {
     try {
-      const body = await req.getBody();
+      const body = (await req.getBody()) as Partial<User>;
       const user = new User(body);
       this.userService.create(user);
       res.status(201).end(user);
-    } catch ({ message }) {
-      res.status(400).end(message);
+    } catch (err) {
+      res.status(400).end((err as Error).message);
     }
   }
 
-  async GET(_, res) {
+  async GET(_: Request, res: Response) {
     const users = this.userService.getAll();
     return res.status(200).end(users);
   }
 
-  async GET_ID(req, res) {
+  async GET_ID(req: Request, res: Response) {
     const [id] = req.params;
+
+    if (!id) {
+      return res.status(400).end('user id not provide');
+    }
 
     if (!validate(id)) return res.status(400).end('user id is invalid (not uuid)');
 

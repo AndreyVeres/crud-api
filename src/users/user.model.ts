@@ -1,12 +1,13 @@
 import { v4 as uuid } from 'uuid';
-import { UserValidator } from './user.validator.js';
+import { UserValidator } from './user.validator';
 
 export class User {
-  username;
-  age;
-  hobbies;
+  username: string;
+  age: number;
+  hobbies: string[];
+  id: string;
 
-  constructor(dto) {
+  constructor(dto: Partial<User>) {
     Object.keys(dto).forEach((key) => {
       if (!this.hasOwnProperty(key)) {
         throw Error(`The '${key}' property is not a User property`);
@@ -15,23 +16,23 @@ export class User {
 
     const { username, age, hobbies } = dto;
 
-    this.username = new UserValidator('username', username)
+    this.username = new UserValidator<string>('username', username)
       .useRules({
         type: 'string',
         touchBy: 'typeof',
       })
       .validate();
 
-    this.age = new UserValidator('age', age)
+    this.age = new UserValidator<number>('age', age)
       .useRules({
         type: 'number',
         touchBy: 'typeof',
       })
       .validate();
 
-    this.hobbies = new UserValidator('hobbies', hobbies)
+    this.hobbies = new UserValidator<string[]>('hobbies', hobbies)
       .useRules({
-        type: Array,
+        instance: Array,
         touchBy: 'instanceOf',
         itemType: 'string',
       })
