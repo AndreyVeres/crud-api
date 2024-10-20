@@ -1,5 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import { UserValidator } from './user.validator';
+import { ValidatorTouchOperator } from 'src/types';
 
 export class User {
   username: string;
@@ -19,21 +20,21 @@ export class User {
     this.username = new UserValidator<string>('username', username)
       .useRules({
         type: 'string',
-        touchBy: 'typeof',
+        touchBy: ValidatorTouchOperator.TYPE_OF,
       })
       .validate();
 
     this.age = new UserValidator<number>('age', age)
       .useRules({
         type: 'number',
-        touchBy: 'typeof',
+        touchBy: ValidatorTouchOperator.TYPE_OF,
       })
       .validate();
 
     this.hobbies = new UserValidator<string[]>('hobbies', hobbies)
       .useRules({
         instance: Array,
-        touchBy: 'instanceOf',
+        touchBy: ValidatorTouchOperator.INSTANCE_OF,
         itemType: 'string',
       })
       .validate();

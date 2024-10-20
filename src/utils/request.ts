@@ -1,6 +1,5 @@
+import { AppRootRoute, RequestMethod } from './../types';
 import { IncomingMessage } from 'http';
-
-type Method = 'POST' | 'PUT' | 'DELETE' | 'GET';
 
 export class Request {
   private request: IncomingMessage;
@@ -9,11 +8,12 @@ export class Request {
   }
 
   get method() {
-    return (this.request.method || 'GET') as Method;
+    const method = this.request.method as RequestMethod;
+    return method;
   }
 
-  get urlParts() {
-    return this.request.url?.split('/').splice(1) || []
+  get root() {
+    return this.request.url?.split('/').splice(1)[0] as AppRootRoute;
   }
 
   get params() {

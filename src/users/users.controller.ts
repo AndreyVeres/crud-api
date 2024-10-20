@@ -3,9 +3,15 @@ import { User } from './user.model';
 import { UsersService } from './users.service';
 import { Request } from '../utils/request';
 import { Response } from '../utils/response';
+import { Controller } from 'src/types';
 
-export class UsersController {
+export class UsersController implements Controller {
   private userService = new UsersService();
+
+  async GET(_: Request, res: Response) {
+    const users = this.userService.getAll();
+    return res.status(200).end(users);
+  }
 
   async DELETE_ID(req: Request, res: Response) {
     const [id] = req.params;
@@ -50,15 +56,10 @@ export class UsersController {
       const body = (await req.getBody()) as Partial<User>;
       const user = new User(body);
       this.userService.create(user);
-      res.status(201).end(user);
+      return res.status(201).end(user);
     } catch (err) {
-      res.status(400).end((err as Error).message);
+      return res.status(400).end((err as Error).message);
     }
-  }
-
-  async GET(_: Request, res: Response) {
-    const users = this.userService.getAll();
-    return res.status(200).end(users);
   }
 
   async GET_ID(req: Request, res: Response) {

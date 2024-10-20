@@ -1,9 +1,9 @@
-type Primitive = 'string' | 'number';
+import { Primitive, InstanceType, ValidatorTouchOperator } from 'src/types';
 
 interface UserValidatorRules {
   type?: Primitive;
-  instance?: ArrayConstructor;
-  touchBy: 'typeof' | 'instanceOf';
+  instance?: InstanceType;
+  touchBy: ValidatorTouchOperator;
   itemType?: Primitive;
 }
 
@@ -43,7 +43,7 @@ export class UserValidator<T> {
           new UserValidator(this.field + `[${[this.value[i]]}]`, this.value[i])
             .useRules({
               type: itemType,
-              touchBy: 'typeof',
+              touchBy: ValidatorTouchOperator.TYPE_OF,
             })
             .validate();
         }
