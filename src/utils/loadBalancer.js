@@ -14,11 +14,26 @@ export class LoadBalancer {
   }
 
   #_init() {
-    for (let i = 0; i < numCPUs; i++) {
-      cluster.fork();
-    }
+    cpus().forEach(() => cluster.fork());
 
-    const balancer = createServer((req, res) => {
+    const balancer = this.#createBalancer();
+    this.#watchDb();
+
+    return balancer;
+  }
+
+  #watchDb() {
+    cluster.on('message', (_, { db }) => {
+      for (const id in cluster.workers) {
+        cluster.workers[id].send({
+          db,
+        });
+      }
+    });
+  }
+
+  #createBalancer() {
+    return createServer((req, res) => {
       req.pipe(
         request(
           {
@@ -38,8 +53,6 @@ export class LoadBalancer {
 
       this.#setCurrentWorker();
     });
-
-    return balancer;
   }
 
   #setCurrentWorker() {

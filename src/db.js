@@ -1,4 +1,4 @@
-export const db = {
+export let db = {
   users: [
     {
       id: '8adcf0c8-de87-409a-a170-8050ff5dc4e3',

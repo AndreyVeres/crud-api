@@ -1,23 +1,44 @@
 import { db } from '../db.js';
 
+let database = db;
+
 export class UsersService {
+  constructor() {
+    process.on('message', function ({ db }) {
+      database = db;
+    });
+  }
+
   getAll() {
-    return db.users;
+    return database.users;
   }
 
   getById(id) {
-    return db.users.find((user) => user.id === id);
+    return database.users.find((user) => user.id === id);
   }
 
   create(user) {
-    db.users.push(user);
+    database.users.push(user);
+    this.#updateDb();
   }
 
   delete(id) {
-    db.users = db.users.filter((user) => user.id !== id);
+    database.users = database.users.filter((user) => user.id !== id);
+    this.#updateDb();
   }
 
   update(user, props) {
-    return Object.assign(user, props);
+    const updatedUser = Object.assign(user, {
+      ...props,
+      id: user.id,
+    });
+
+    this.#updateDb();
+
+    return updatedUser;
+  }
+
+  #updateDb() {
+    process.send({ db: database });
   }
 }
