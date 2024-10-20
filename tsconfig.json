@@ -17,5 +17,5 @@
     "strictPropertyInitialization": false
   },
   "files": ["src/entry.ts"],
-  "exclude": ["node_modules", "__test__", "dist", "**/*spec.ts"]
+  "exclude": ["node_modules", "dist"]
 }
