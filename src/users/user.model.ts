@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import { UserValidator } from './user.validator';
-import { ValidatorTouchOperator } from 'src/types';
+import { ValidatorTouchOperator } from '../types';
 
 export class User {
   username: string;

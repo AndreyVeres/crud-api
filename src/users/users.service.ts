@@ -1,33 +1,27 @@
-import { db } from '../db';
 import { User } from './user.model';
+import { Service } from '../utils/service';
 
-let database = db;
-
-export class UsersService {
+export class UsersService extends Service {
   constructor() {
-    process.on('message', ({ db }) => {
-      if (db) {
-        database = db;
-      }
-    });
+    super();
   }
 
   getAll() {
-    return database.users;
+    return this.database.users;
   }
 
   getById(id: string) {
-    return database.users.find((user) => user.id === id);
+    return this.database.users.find((user) => user.id === id);
   }
 
   create(user: User) {
-    database.users.push(user);
-    this.#updateDb();
+    this.database.users.push(user);
+    this.updateDb();
   }
 
   delete(id: string) {
-    database.users = database.users.filter((user) => user.id !== id);
-    this.#updateDb();
+    this.database.users = this.database.users.filter((user) => user.id !== id);
+    this.updateDb();
   }
 
   update(user: User, props: Partial<User>) {
@@ -36,14 +30,8 @@ export class UsersService {
       id: user.id,
     });
 
-    this.#updateDb();
+    this.updateDb();
 
     return updatedUser;
-  }
-
-  #updateDb() {
-    if (process.send) {
-      process.send({ db: database });
-    }
   }
 }

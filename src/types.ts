@@ -2,6 +2,7 @@ import { UsersController } from './users/users.controller';
 import { Response } from './utils/response';
 import { Request } from './utils/request';
 import { IncomingMessage, ServerResponse } from 'http';
+import { User } from './users/user.model';
 
 export type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 export interface AppRoutes {
@@ -27,3 +28,7 @@ export interface Controller {
   POST: (req: Request, res: Response) => Promise<ServerResponse<IncomingMessage>>;
 }
 export type ControllerHandleName = keyof Controller;
+
+export interface DataBase {
+  users: User[];
+}

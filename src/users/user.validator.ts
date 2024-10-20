@@ -1,4 +1,4 @@
-import { Primitive, InstanceType, ValidatorTouchOperator } from 'src/types';
+import { Primitive, InstanceType, ValidatorTouchOperator } from '../types';
 
 interface UserValidatorRules {
   type?: Primitive;

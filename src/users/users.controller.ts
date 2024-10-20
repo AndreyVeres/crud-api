@@ -3,7 +3,7 @@ import { User } from './user.model';
 import { UsersService } from './users.service';
 import { Request } from '../utils/request';
 import { Response } from '../utils/response';
-import { Controller } from 'src/types';
+import { Controller } from '../types';
 
 export class UsersController implements Controller {
   private userService = new UsersService();
