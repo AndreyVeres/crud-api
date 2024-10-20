@@ -1,4 +1,4 @@
-import { ServerResponse } from 'http';
+import { OutgoingHttpHeader, OutgoingHttpHeaders, ServerResponse } from 'http';
 
 export class Response {
   private response;
@@ -13,5 +13,13 @@ export class Response {
   status(status: number) {
     this.response.statusCode = status;
     return this;
+  }
+
+  writeHead(statusCode: number, headers?: OutgoingHttpHeaders | OutgoingHttpHeader[]) {
+    return this.response.writeHead(statusCode, headers);
+  }
+
+  send(data: unknown) {
+    this.end(data);
   }
 }

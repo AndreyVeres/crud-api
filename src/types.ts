@@ -32,3 +32,5 @@ export type ControllerHandleName = keyof Controller;
 export interface DataBase {
   users: User[];
 }
+
+export type MiddleWare = (req: Request, res: Response, next: (req: Request, res: Response) => void) => void;

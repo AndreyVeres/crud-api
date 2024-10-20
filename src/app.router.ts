@@ -1,4 +1,4 @@
-import { AppRoutes,  ControllerHandleName } from './types';
+import { AppRoutes, ControllerHandleName } from './types';
 import { UsersController } from './users/users.controller';
 import { Request } from './utils/request';
 import { Response } from './utils/response';

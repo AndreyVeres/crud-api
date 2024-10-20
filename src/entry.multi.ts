@@ -3,6 +3,7 @@ import { config } from 'dotenv';
 config();
 import cluster from 'cluster';
 import { LoadBalancer } from './utils/loadBalancer';
+import { headersMiddleware } from './middlewares/headers.middleware';
 
 const { WORKER_BASE_PORT, LOAD_BALANCER_PORT, HOSTNAME } = process.env;
 
@@ -26,6 +27,7 @@ if (cluster.isPrimary) {
 
   const workerPort = +WORKER_BASE_PORT + cluster.worker.id - 1;
 
+  app.use(headersMiddleware);
   app
     .start()
     .listen(workerPort)

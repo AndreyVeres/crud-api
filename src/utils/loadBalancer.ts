@@ -14,13 +14,13 @@ export class LoadBalancer {
   start() {
     cpus().forEach(() => cluster.fork());
 
-    const balancer = this.#createBalancer();
-    this.#watchDb();
+    const balancer = this.createBalancer();
+    this.watchDb();
 
     return balancer;
   }
 
-  #watchDb() {
+  private watchDb() {
     cluster.on('message', (_, { db }) => {
       for (const id in cluster.workers) {
         if (cluster.workers[id]) {
@@ -32,7 +32,7 @@ export class LoadBalancer {
     });
   }
 
-  #createBalancer() {
+  private createBalancer() {
     if (!WORKER_BASE_PORT || !HOSTNAME) {
       throw new Error('Environment variables WORKER_BASE_PORT and HOSTNAME must be set.');
     }
@@ -57,11 +57,11 @@ export class LoadBalancer {
         { end: true }
       );
 
-      this.#setCurrentWorker();
+      this.setCurrentWorker();
     });
   }
 
-  #setCurrentWorker() {
+  private setCurrentWorker() {
     this.currentWorker = (this.currentWorker + 1) % numCPUs;
   }
 }
