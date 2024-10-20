@@ -1,16 +1,41 @@
 import { v4 as uuid } from 'uuid';
-import { RequiredError } from '../utils/required.js';
+import { UserValidator } from './user.validator.js';
 
 export class User {
-  constructor({ name, age, hobbies }) {
-    if (!name) throw new RequiredError('name is required field');
-    this.name = name;
+  username;
+  age;
+  hobbies;
 
-    if (!age) throw new RequiredError('age is required field');
-    this.age = age;
+  constructor(dto) {
+    Object.keys(dto).forEach((key) => {
+      if (!this.hasOwnProperty(key)) {
+        throw Error(`The '${key}' property is not a User property`);
+      }
+    });
 
-    if (!hobbies) throw new RequiredError('hobbies is required field');
-    this.hobbies = hobbies;
+    const { username, age, hobbies } = dto;
+
+    this.username = new UserValidator('username', username)
+      .useRules({
+        type: 'string',
+        touchBy: 'typeof',
+      })
+      .validate();
+
+    this.age = new UserValidator('age', age)
+      .useRules({
+        type: 'number',
+        touchBy: 'typeof',
+      })
+      .validate();
+
+    this.hobbies = new UserValidator('hobbies', hobbies)
+      .useRules({
+        type: Array,
+        touchBy: 'instanceOf',
+        itemType: 'string',
+      })
+      .validate();
 
     this.id = uuid();
   }

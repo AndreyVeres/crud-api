@@ -28,16 +28,19 @@ export class UsersController {
     const user = this.userService.getById(id);
     if (!user) return res.status(404).end(`user with id:${id} doesn't exist`);
 
-    const body = await req.getBody();
-    const updatedUser = this.userService.update(user, body);
+    try {
+      const body = await req.getBody();
+      const updatedUser = this.userService.update(user, new User(body));
 
-    return res.status(200).end(updatedUser);
+      return res.status(200).end(updatedUser);
+    } catch (err) {
+      return res.status(400).end(err.message);
+    }
   }
 
   async POST(req, res) {
-    const body = await req.getBody();
-
     try {
+      const body = await req.getBody();
       const user = new User(body);
       this.userService.create(user);
       res.status(201).end(user);

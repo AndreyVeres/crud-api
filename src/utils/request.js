@@ -25,10 +25,14 @@ export class Request {
       });
 
       this.request.on('end', () => {
-        if (this.request.headers['content-type'] === 'application/x-www-form-urlencoded') {
-          resolve(new URLSearchParams(body));
-        } else {
-          resolve(JSON.parse(body));
+        try {
+          if (this.request.headers['content-type'] === 'application/x-www-form-urlencoded') {
+            resolve(new URLSearchParams(body));
+          } else {
+            resolve(JSON.parse(body));
+          }
+        } catch (err) {
+          reject(new Error(`Invalid JSON format: ${err.message}`));
         }
       });
 
