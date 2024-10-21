@@ -18,8 +18,8 @@ export class AppRouter {
 
     const handlerName = `${method}${id ? '_ID' : ''}` as ControllerHandleName;
 
-    if (!this.routes[root][handlerName]) {
-      return res.status(404).end('route not found');
+    if (!this.routes[root] || !this.routes[root][handlerName]) {
+      return res.status(404).end({ error: 'There is no such way' });
     }
 
     this.routes[root][handlerName](req, res);
