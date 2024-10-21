@@ -1,10 +1,12 @@
 import request from "supertest";
 import { App } from "../app";
 import { headersMiddleware } from "../middlewares/headers.middleware";
+import { bodyParserMiddleware } from "../middlewares/bodyParser.middleware";
 
 describe("User API - Update and Delete User", () => {
   const app = new App();
   app.use(headersMiddleware);
+  app.use(bodyParserMiddleware)
   const server = app.start();
 
   let createdUserId: string;

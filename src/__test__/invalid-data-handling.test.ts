@@ -1,3 +1,4 @@
+import { bodyParserMiddleware } from '../middlewares/bodyParser.middleware';
 import request from "supertest";
 import { App } from "../app";
 import { headersMiddleware } from "../middlewares/headers.middleware";
@@ -5,6 +6,7 @@ import { headersMiddleware } from "../middlewares/headers.middleware";
 describe("User API - Invalid Data Handling", () => {
   const app = new App();
   app.use(headersMiddleware);
+  app.use(bodyParserMiddleware)
   const server = app.start();
 
   let createdUserId: string;

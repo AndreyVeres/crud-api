@@ -3,20 +3,23 @@ import { App } from "../app";
 import { headersMiddleware } from "../middlewares/headers.middleware";
 import { validate } from "uuid";
 import { User } from "../users/user.model";
+import { bodyParserMiddleware } from "../middlewares/bodyParser.middleware";
 
 describe("scenario 1", () => {
   const app = new App();
   app.use(headersMiddleware);
-  const server = app.start();
+  app.use(bodyParserMiddleware)
+  const server = app.start()
 
   let newCreatedUser: User;
-  it("Get all records with a GET api/users", async () => {
+  it("Get all records with a GET users", async () => {
     const { body, status } = await request(server).get("/users");
+
     expect(status).toBe(200);
     expect(body).toEqual([]);
   });
 
-  it("A new object is created by a POST api/users", async () => {
+  it("A new object is created by a POST users", async () => {
     const payload = {
       username: "new user name",
       age: 12,
