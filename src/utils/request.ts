@@ -1,10 +1,19 @@
-import { AppRootRoute, RequestMethod } from './../types';
-import { IncomingMessage } from 'http';
+import { AppRootRoute, RequestMethod } from "./../types";
+import { IncomingMessage } from "http";
 
 export class Request {
   private request: IncomingMessage;
+
   constructor(request: IncomingMessage) {
     this.request = request;
+  }
+
+  set body(value: string) {
+    this.body = JSON.parse(value);
+  }
+
+  get body() {
+    return this.body;
   }
 
   get method() {
@@ -13,25 +22,32 @@ export class Request {
   }
 
   get root() {
-    return this.request.url?.split('/').splice(1)[0] as AppRootRoute;
+    return this.request.url?.split("/").splice(1)[0] as AppRootRoute;
   }
 
   get params() {
-    const [_, ...params] = this.request.url?.split('/').splice(1) || [];
+    const [_, ...params] = this.request.url?.split("/").splice(1) || [];
     return params;
+  }
+
+  get on() {
+    return this.request.on;
   }
 
   async getBody() {
     return new Promise((resolve, reject) => {
-      let body = '';
+      let body = "";
 
-      this.request.on('data', (chunk) => {
+      this.request.on("data", (chunk) => {
         body += chunk.toString();
       });
 
-      this.request.on('end', () => {
+      this.request.on("end", () => {
         try {
-          if (this.request.headers['content-type'] === 'application/x-www-form-urlencoded') {
+          if (
+            this.request.headers["content-type"] ===
+            "application/x-www-form-urlencoded"
+          ) {
             resolve(new URLSearchParams(body));
           } else {
             resolve(JSON.parse(body));
@@ -41,7 +57,7 @@ export class Request {
         }
       });
 
-      this.request.on('error', (err) => {
+      this.request.on("error", (err) => {
         reject(err);
       });
     });

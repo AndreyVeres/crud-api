@@ -1,9 +1,9 @@
-import { validate } from 'uuid';
-import { User } from './user.model';
-import { UsersService } from './users.service';
-import { Request } from '../utils/request';
-import { Response } from '../utils/response';
-import { Controller } from '../types';
+import { validate } from "uuid";
+import { User } from "./user.model";
+import { UsersService } from "./users.service";
+import { Request } from "../utils/request";
+import { Response } from "../utils/response";
+import { Controller } from "../types";
 
 export class UsersController implements Controller {
   private userService = new UsersService();
@@ -16,10 +16,11 @@ export class UsersController implements Controller {
   async DELETE_ID(req: Request, res: Response) {
     const [id] = req.params;
     if (!id) {
-      return res.status(400).end('user id not provide');
+      return res.status(400).end("user id not provide");
     }
 
-    if (!validate(id)) return res.status(400).end('userId is invalid (not uuid)');
+    if (!validate(id))
+      return res.status(400).end("userId is invalid (not uuid)");
 
     const user = this.userService.getById(id);
     if (!user) return res.status(404).end(`user with id:${id} doesn't exist`);
@@ -33,10 +34,11 @@ export class UsersController implements Controller {
     const [id] = req.params;
 
     if (!id) {
-      return res.status(400).end('user id not provide');
+      return res.status(400).end("user id not provide");
     }
 
-    if (!validate(id)) return res.status(400).end('userId is invalid (not uuid)');
+    if (!validate(id))
+      return res.status(400).end("userId is invalid (not uuid)");
 
     const user = this.userService.getById(id);
     if (!user) return res.status(404).end(`user with id:${id} doesn't exist`);
@@ -56,9 +58,9 @@ export class UsersController implements Controller {
       const body = (await req.getBody()) as Partial<User>;
       const user = new User(body);
       this.userService.create(user);
-      return res.status(201).end(user);
+      res.status(201).end(user);
     } catch (err) {
-      return res.status(400).end((err as Error).message);
+      res.status(400).end((err as Error).message);
     }
   }
 
@@ -66,10 +68,11 @@ export class UsersController implements Controller {
     const [id] = req.params;
 
     if (!id) {
-      return res.status(400).end('user id not provide');
+      return res.status(400).end("user id not provide");
     }
 
-    if (!validate(id)) return res.status(400).end('user id is invalid (not uuid)');
+    if (!validate(id))
+      return res.status(400).end("user id is invalid (not uuid)");
 
     const user = this.userService.getById(id);
     if (!user) return res.status(404).end(`user with id:${id} doesn't exist`);

@@ -1,8 +1,8 @@
-import { createServer } from 'http';
-import { AppRouter } from './app.router';
-import { Request } from './utils/request';
-import { Response } from './utils/response';
-import { MiddleWare } from './types';
+import { createServer } from "http";
+import { AppRouter } from "./app.router";
+import { Request } from "./utils/request";
+import { Response } from "./utils/response";
+import { MiddleWare } from "./types";
 export class App {
   private router = new AppRouter();
   private middlewares: MiddleWare[] = [];
@@ -17,8 +17,10 @@ export class App {
       const response = new Response(res);
 
       this.middlewares.forEach((middleware) => {
-        middleware(request, response, this.router.navigate.bind(this.router));
+        middleware(request, response);
       });
+
+      this.router.navigate(request, response);
     });
   }
 }

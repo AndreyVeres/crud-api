@@ -1,9 +1,5 @@
-import { MiddleWare } from 'src/types';
+import { MiddleWare } from "src/types";
 
-export const headersMiddleware: MiddleWare = (req, res, next) => {
-  res.writeHead(200, {
-    'Content-type': 'application/json',
-  });
-
-  next(req, res);
+export const headersMiddleware: MiddleWare = (_, res) => {
+  res.setHeader("Content-type", "application/json");
 };

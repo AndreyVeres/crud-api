@@ -1,4 +1,4 @@
-import { OutgoingHttpHeader, OutgoingHttpHeaders, ServerResponse } from 'http';
+import { OutgoingHttpHeader, OutgoingHttpHeaders, ServerResponse } from "http";
 
 export class Response {
   private response;
@@ -15,8 +15,19 @@ export class Response {
     return this;
   }
 
-  writeHead(statusCode: number, headers?: OutgoingHttpHeaders | OutgoingHttpHeader[]) {
+  set finished(value: boolean) {
+    this.response.finished = value;
+  }
+
+  writeHead(
+    statusCode: number,
+    headers?: OutgoingHttpHeaders | OutgoingHttpHeader[]
+  ) {
     return this.response.writeHead(statusCode, headers);
+  }
+
+  setHeader(name: string, value: number | string | readonly string[]) {
+    return this.response.setHeader(name, value);
   }
 
   send(data: unknown) {
