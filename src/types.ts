@@ -25,10 +25,7 @@ export interface Controller {
   GET_ID(req: Request, res: Response): ControllerResponseType;
   DELETE_ID: (req: Request, res: Response) => ControllerResponseType;
   PUT_ID: (req: Request, res: Response) => ControllerResponseType;
-  POST: (
-    req: Request,
-    res: Response
-  ) => void;
+  POST: (req: Request, res: Response) => void;
 }
 export type ControllerHandleName = keyof Controller;
 
@@ -36,4 +33,8 @@ export interface DataBase {
   users: User[];
 }
 
-export type MiddleWare = (req: Request, res: Response) => void;
+export type MiddleWare = (
+  req: Request,
+  res: Response,
+  next: (req: Request, res: Response) => void
+) => void;

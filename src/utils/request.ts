@@ -3,17 +3,13 @@ import { IncomingMessage } from "http";
 
 export class Request {
   private request: IncomingMessage;
-
+  body: string;
   constructor(request: IncomingMessage) {
     this.request = request;
   }
 
-  set body(value: string) {
-    this.body = JSON.parse(value);
-  }
-
-  get body() {
-    return this.body;
+  get on() {
+    return this.request.on.bind(this.request);
   }
 
   get method() {
@@ -30,36 +26,7 @@ export class Request {
     return params;
   }
 
-  get on() {
-    return this.request.on;
-  }
-
-  async getBody() {
-    return new Promise((resolve, reject) => {
-      let body = "";
-
-      this.request.on("data", (chunk) => {
-        body += chunk.toString();
-      });
-
-      this.request.on("end", () => {
-        try {
-          if (
-            this.request.headers["content-type"] ===
-            "application/x-www-form-urlencoded"
-          ) {
-            resolve(new URLSearchParams(body));
-          } else {
-            resolve(JSON.parse(body));
-          }
-        } catch (err) {
-          reject(new Error(`Invalid JSON format: ${(err as Error).message}`));
-        }
-      });
-
-      this.request.on("error", (err) => {
-        reject(err);
-      });
-    });
+  get req() {
+    return this.request;
   }
 }

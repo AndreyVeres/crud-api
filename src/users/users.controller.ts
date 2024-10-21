@@ -44,7 +44,7 @@ export class UsersController implements Controller {
     if (!user) return res.status(404).end(`user with id:${id} doesn't exist`);
 
     try {
-      const body = (await req.getBody()) as Partial<User>;
+      const body = req.body as Partial<User>;
       const updatedUser = this.userService.update(user, new User(body));
 
       return res.status(200).end(updatedUser);
@@ -55,7 +55,7 @@ export class UsersController implements Controller {
 
   async POST(req: Request, res: Response) {
     try {
-      const body = (await req.getBody()) as Partial<User>;
+      const body = req.body as Partial<User>;
       const user = new User(body);
       this.userService.create(user);
       res.status(201).end(user);

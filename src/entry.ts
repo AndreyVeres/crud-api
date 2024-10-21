@@ -9,7 +9,7 @@ const { APP_PORT, HOSTNAME } = process.env;
 const app = new App();
 
 app.use(headersMiddleware);
-
+app.use(bodyParserMiddleware)
 app
   .start()
   .listen(APP_PORT)

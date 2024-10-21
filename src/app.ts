@@ -16,11 +16,22 @@ export class App {
       const request = new Request(req);
       const response = new Response(res);
 
-      this.middlewares.forEach((middleware) => {
-        middleware(request, response);
-      });
-
-      this.router.navigate(request, response);
+      this.runMiddlewares(request, response);
     });
+  }
+
+  runMiddlewares(req: Request, res: Response) {
+    let currentMiddlewareIndex = 0;
+
+    const next = () => {
+      if (currentMiddlewareIndex < this.middlewares.length) {
+        const middleware = this.middlewares[currentMiddlewareIndex];
+        currentMiddlewareIndex += 1;
+        middleware(req, res, next);
+      } else {
+        this.router.navigate(req, res);
+      }
+    };
+    next();
   }
 }
