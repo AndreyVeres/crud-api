@@ -1,10 +1,10 @@
-import { App } from "./app";
-import { config } from "dotenv";
+import { App } from './app';
+import { config } from 'dotenv';
 config();
-import cluster from "cluster";
-import { LoadBalancer } from "./utils/loadBalancer";
-import { headersMiddleware } from "./middlewares/headers.middleware";
-import { bodyParserMiddleware } from "./middlewares/bodyParser.middleware";
+import cluster from 'cluster';
+import { LoadBalancer } from './utils/loadBalancer';
+import { headersMiddleware } from './middlewares/headers.middleware';
+import { bodyParserMiddleware } from './middlewares/bodyParser.middleware';
 
 const { WORKER_BASE_PORT, LOAD_BALANCER_PORT, HOSTNAME } = process.env;
 
@@ -14,17 +14,9 @@ if (cluster.isPrimary) {
   loadBalancer
     .start()
     .listen(LOAD_BALANCER_PORT)
-    .on("listening", () =>
-      console.warn(
-        `The Load Balancer was started on http://${HOSTNAME}:${LOAD_BALANCER_PORT}`
-      )
-    );
+    .on('listening', () => console.warn(`The Load Balancer was started on http://${HOSTNAME}:${LOAD_BALANCER_PORT}`));
 } else {
   const app = new App();
-
-  if (!WORKER_BASE_PORT) {
-    throw Error(`Error read WORKER_BASE_PORT`);
-  }
 
   if (!cluster.worker) {
     throw Error(`Error read cluster.worker`);
@@ -37,12 +29,6 @@ if (cluster.isPrimary) {
   app
     .start()
     .listen(workerPort)
-    .on("request", () =>
-      console.warn(
-        `The request was redirected by the Load Balancer to the port ${workerPort}`
-      )
-    )
-    .on("listening", () =>
-      console.warn(`The WORKER was started on http://${HOSTNAME}:${workerPort}`)
-    );
+    .on('request', () => console.warn(`The request was redirected by the Load Balancer to the port ${workerPort}`))
+    .on('listening', () => console.warn(`The WORKER was started on http://${HOSTNAME}:${workerPort}`));
 }

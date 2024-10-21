@@ -1,15 +1,7 @@
 import { DataBase } from 'src/types';
-
 export abstract class Service {
   database: DataBase = {
-    users: [
-      // {
-      //   id: '8adcf0c8-de87-409a-a170-8050ff5dc4e3',
-      //   username: 'User 1',
-      //   age: 22,
-      //   hobbies: ['JavaScript'],
-      // },
-    ],
+    users: [],
   };
   constructor() {
     process.on('message', ({ db }) => {

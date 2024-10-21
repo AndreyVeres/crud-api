@@ -33,10 +33,6 @@ export class LoadBalancer {
   }
 
   private createBalancer() {
-    if (!WORKER_BASE_PORT || !HOSTNAME) {
-      throw new Error('Environment variables WORKER_BASE_PORT and HOSTNAME must be set.');
-    }
-
     return createServer((req, res) => {
       req.pipe(
         request(
